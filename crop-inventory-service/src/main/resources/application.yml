@@ -1,0 +1,24 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: crop-service
+
+  datasource:
+    # Permanent MySQL JDBC configuration
+    url: jdbc:mysql://localhost:3306/crop_db
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1234
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    # Let Hibernate autodetect dialect based on JDBC driver
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
