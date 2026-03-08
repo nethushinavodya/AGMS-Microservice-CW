@@ -1,0 +1,34 @@
+server:
+  port: 8099
+
+spring:
+  application:
+    name: automation-service
+  config:
+    import: optional:configserver:http://localhost:8888
+  datasource:
+    url: jdbc:mysql://localhost:3306/automation_db
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+
+# Zone service base URL (can be overridden in production to use service discovery)
+zone:
+  service:
+    url: ${ZONE_SERVICE_URL:http://localhost:8081}
+
+# Eureka client configuration
+eureka:
+  client:
+    enabled: ${EUREKA_CLIENT_ENABLED:false}
+    register-with-eureka: ${EUREKA_REGISTER_WITH_EUREKA:false}
+    fetch-registry: ${EUREKA_FETCH_REGISTRY:false}
+    service-url:
+      defaultZone: http://localhost:8761/eureka
