@@ -13,7 +13,7 @@
         <module name="automation-service" />
         <module name="eureka-server" />
       </profile>
-      <profile name="Annotation profile for sensor-telemetry-service" enabled="true">
+      <profile name="Annotation profile for zone-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
