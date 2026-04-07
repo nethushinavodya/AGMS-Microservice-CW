@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: AUTOMATION-SERVICE
+  cloud:
+    config:
+      uri: http://localhost:8888
