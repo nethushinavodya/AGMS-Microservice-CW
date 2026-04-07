@@ -1,44 +1,37 @@
 package com.agms.api_gateway.filter;
 
+import com.agms.api_gateway.constant.SecurityConstants;
+import com.agms.api_gateway.exception.UnauthorizedException;
 import com.agms.api_gateway.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Component
-public class JwtAuthenticationFilter implements GlobalFilter {
-
-    @Autowired
-    private JwtUtil jwtUtil;
+public class JwtAuthenticationFilter implements GatewayFilter {
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+    public Mono<Void> filter(ServerWebExchange exchange,
+                             GatewayFilterChain chain) {
 
-        String authHeader = exchange.getRequest()
-                .getHeaders()
-                .getFirst("Authorization");
+        ServerHttpRequest request = exchange.getRequest();
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        String authHeader = request.getHeaders()
+                .getFirst(SecurityConstants.HEADER);
 
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
-
+        if (authHeader == null || !authHeader.startsWith(SecurityConstants.PREFIX)) {
+            throw new UnauthorizedException("Missing Authorization Header");
         }
 
-        String token = authHeader.substring(7);
+        String token = authHeader.replace(SecurityConstants.PREFIX, "");
 
-        if (!jwtUtil.validateToken(token)) {
-
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
-
+        if (!JwtUtil.validateToken(token)) {
+            throw new UnauthorizedException("Invalid Token");
         }
 
         return chain.filter(exchange);
     }
-
 }
