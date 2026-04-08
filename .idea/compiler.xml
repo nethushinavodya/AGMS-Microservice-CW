@@ -8,10 +8,10 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="crop-inventory-service" />
-        <module name="api-gateway" />
-        <module name="config-server" />
-        <module name="automation-service" />
-        <module name="eureka-server" />
+        <module name="Eureka-Server" />
+        <module name="Api-Gateway" />
+        <module name="Config-Server" />
+        <module name="Automation-Service" />
       </profile>
       <profile name="Annotation profile for zone-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -20,19 +20,19 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
-        <module name="sensor-telemetry-service" />
+        <module name="Sensor-Service" />
         <module name="zone-service" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="api-gateway" options="-parameters" />
-      <module name="automation-service" options="-parameters" />
-      <module name="config-server" options="-parameters" />
+      <module name="Api-Gateway" options="-parameters" />
+      <module name="Automation-Service" options="-parameters" />
+      <module name="Config-Server" options="-parameters" />
+      <module name="Eureka-Server" options="-parameters" />
+      <module name="Sensor-Service" options="-parameters" />
       <module name="crop-inventory-service" options="-parameters" />
-      <module name="eureka-server" options="-parameters" />
-      <module name="sensor-telemetry-service" options="-parameters" />
       <module name="zone-service" options="-parameters" />
     </option>
   </component>

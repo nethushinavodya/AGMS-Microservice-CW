@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: SENSOR-SERVICE
+  cloud:
+    config:
+      uri: http://localhost:8888
