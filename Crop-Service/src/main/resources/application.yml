@@ -6,7 +6,7 @@ spring:
     name: crop-service
 
   datasource:
-    url: jdbc:mysql://localhost:3306/automation_db
+    url: jdbc:mysql://localhost:3306/crop_db
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
