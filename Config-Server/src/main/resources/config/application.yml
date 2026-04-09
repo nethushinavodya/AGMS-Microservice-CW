@@ -1,0 +1,19 @@
+# Shared defaults for all services via Config Server (native profile)
+# Services can override by adding files like `zone-service.yml`, `sensor-service.yml`, etc.
+
+spring:
+  # NOTE: Don't set `spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS` here.
+  # Some Jackson versions don't expose that enum constant, and it breaks Config Server startup.
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+# Eureka defaults (services can still override locally)
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+

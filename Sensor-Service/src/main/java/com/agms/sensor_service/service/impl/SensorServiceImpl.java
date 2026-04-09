@@ -7,6 +7,9 @@ import com.agms.sensor_service.dto.TelemetryResponseDTO;
 import com.agms.sensor_service.service.SensorService;
 import com.agms.sensor_service.util.TokenManager;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +17,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SensorServiceImpl implements SensorService {
 
+    private static final Logger log = LoggerFactory.getLogger(SensorServiceImpl.class);
+
     private final ExternalIoTClient externalIoTClient;
     private final AutomationServiceClient automationServiceClient;
     private final TokenManager tokenManager;
 
     private TelemetryResponseDTO latestData;
 
-    private final String DEVICE_ID = "b751b8c9-644a-484c-ba3f-be63f9b27ad0";
+    @Value("${agms.external-iot.device-id:b751b8c9-644a-484c-ba3f-be63f9b27ad0}")
+    private String deviceId;
 
     @Scheduled(fixedRate = 10000)
     @Override
@@ -28,8 +34,18 @@ public class SensorServiceImpl implements SensorService {
 
         String token = tokenManager.getToken();
 
-        TelemetryResponseDTO telemetry =
-                externalIoTClient.getTelemetry(token, DEVICE_ID);
+        if (token == null) {
+            // When external IoT is disabled or temporarily unavailable, just skip.
+            log.debug("Token unavailable - skipping telemetry fetch");
+            return;
+        }
+
+        TelemetryResponseDTO telemetry = externalIoTClient.getTelemetry(token, deviceId);
+
+        if (telemetry == null) {
+            log.warn("Failed to fetch telemetry for device {}", deviceId);
+            return;
+        }
 
         latestData = telemetry;
 
@@ -38,9 +54,12 @@ public class SensorServiceImpl implements SensorService {
         request.setTemperature(telemetry.getValue().getTemperature());
         request.setHumidity(telemetry.getValue().getHumidity());
 
-        automationServiceClient.sendToAutomation(request);
-
-        System.out.println("Sensor Data Sent to Automation Service");
+        try {
+            automationServiceClient.sendToAutomation(request);
+            log.info("Sensor Data Sent to Automation Service");
+        } catch (Exception ex) {
+            log.error("Failed to send data to automation service: {}", ex.getMessage());
+        }
     }
 
     @Override

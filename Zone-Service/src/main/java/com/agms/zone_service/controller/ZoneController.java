@@ -3,15 +3,19 @@ package com.agms.zone_service.controller;
 import com.agms.zone_service.dto.ZoneRequestDTO;
 import com.agms.zone_service.dto.ZoneResponseDTO;
 import com.agms.zone_service.service.ZoneService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
 @RequestMapping("/api/zones")
-@RequiredArgsConstructor
 public class ZoneController {
 
     private final ZoneService zoneService;
+
+    @Autowired
+    public ZoneController(ZoneService zoneService) {
+        this.zoneService = zoneService;
+    }
 
     @PostMapping
     public ZoneResponseDTO createZone(@RequestBody ZoneRequestDTO dto) {

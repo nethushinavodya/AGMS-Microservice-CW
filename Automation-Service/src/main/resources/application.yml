@@ -1,5 +1,6 @@
 server:
-  port: 8083
+  port: ${SERVER_PORT:${PORT:8085}}
+  shutdown: graceful
 
 spring:
   application:
@@ -15,6 +16,9 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
 
 eureka:
   client:

@@ -1,0 +1,214 @@
+{
+  "info": {
+    "name": "AGMS - Local",
+    "_postman_id": "agms-local-collection",
+    "description": "Postman collection for AGMS microservices (local). Uses environment variables for host and ports.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Zone-Service",
+      "item": [
+        {
+          "name": "Create Zone",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"zoneName\": \"Greenhouse A\",\n  \"minTemp\": 18.5,\n  \"maxTemp\": 28.0\n}"
+            },
+            "url": {
+              "raw": "http://{{host}}:{{port_zone}}/api/zones",
+              "host": [
+                "http://{{host}}"
+              ],
+              "port": "{{port_zone}}",
+              "path": [
+                "api","zones"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200 or 201', function () {\n  pm.expect(pm.response.code).to.be.oneOf([200,201]);\n});",
+                  "if (pm.response.code === 200 || pm.response.code === 201) {\n  var json = pm.response.json();\n  if (json.id) {\n    pm.environment.set('zoneId', json.id);\n  }\n}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Zone by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:{{port_zone}}/api/zones/{{zoneId}}",
+              "host": [
+                "http://{{host}}"
+              ],
+              "port": "{{port_zone}}",
+              "path": [
+                "api","zones","{{zoneId}}"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {\n  pm.response.to.have.status(200);\n});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Zone",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"zoneName\": \"Greenhouse A - Updated\",\n  \"minTemp\": 19.0,\n  \"maxTemp\": 27.5\n}"
+            },
+            "url": {
+              "raw": "http://{{host}}:{{port_zone}}/api/zones/{{zoneId}}",
+              "host": [
+                "http://{{host}}"
+              ],
+              "port": "{{port_zone}}",
+              "path": [
+                "api","zones","{{zoneId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Zone",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:{{port_zone}}/api/zones/{{zoneId}}",
+              "host": [
+                "http://{{host}}"
+              ],
+              "port": "{{port_zone}}",
+              "path": [
+                "api","zones","{{zoneId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Crop-Service",
+      "item": [
+        {
+          "name": "Create Crop",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"cropName\": \"Lettuce\",\n  \"batchNumber\": \"BATCH-001\",\n  \"zoneId\": \"1\",\n  \"quantity\": 100\n}" },
+            "url": { "raw": "http://{{host}}:{{port_crop}}/api/crops", "host": [ "http://{{host}}" ], "port": "{{port_crop}}", "path": [ "api","crops" ] }
+          },
+          "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Status is 200 or 201', function () { pm.expect(pm.response.code).to.be.oneOf([200,201]); });", "if (pm.response.code === 200 || pm.response.code === 201) { var json = pm.response.json(); if (json.id) { pm.environment.set('cropId', json.id); } }" ], "type": "text/javascript" } } ],
+          "response": []
+        },
+        {
+          "name": "Update Crop Status",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"VEGETATIVE\"\n}" },
+            "url": { "raw": "http://{{host}}:{{port_crop}}/api/crops/{{cropId}}/status", "host": [ "http://{{host}}" ], "port": "{{port_crop}}", "path": [ "api","crops","{{cropId}}","status" ] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Crops",
+          "request": { "method": "GET", "header": [], "url": { "raw": "http://{{host}}:{{port_crop}}/api/crops", "host": [ "http://{{host}}" ], "port": "{{port_crop}}", "path": [ "api","crops" ] } },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Automation-Service",
+      "item": [
+        {
+          "name": "Process Sensor Data",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"deviceId\": \"dev-123\",\n  \"zoneId\": \"1\",\n  \"temperature\": 26.3,\n  \"humidity\": 55.2,\n  \"capturedAt\": \"2026-04-09T12:00:00Z\"\n}" },
+            "url": { "raw": "http://{{host}}:{{port_automation}}/api/automation/process", "host": [ "http://{{host}}" ], "port": "{{port_automation}}", "path": [ "api","automation","process" ] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Automation Logs",
+          "request": { "method": "GET", "header": [], "url": { "raw": "http://{{host}}:{{port_automation}}/api/automation/logs", "host": [ "http://{{host}}" ], "port": "{{port_automation}}", "path": [ "api","automation","logs" ] } },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sensor-Service",
+      "item": [
+        {
+          "name": "Get Latest Telemetry",
+          "request": { "method": "GET", "header": [], "url": { "raw": "http://{{host}}:{{port_sensor}}/api/sensors/latest", "host": [ "http://{{host}}" ], "port": "{{port_sensor}}", "path": [ "api","sensors","latest" ] } },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Eureka-Server",
+      "item": [
+        {
+          "name": "Eureka Dashboard (health)",
+          "request": { "method": "GET", "header": [], "url": { "raw": "http://{{host}}:{{port_eureka}}/", "host": [ "http://{{host}}" ], "port": "{{port_eureka}}", "path": [] } },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Api-Gateway",
+      "item": [
+        {
+          "name": "Proxy - Get All Crops (via gateway)",
+          "request": { "method": "GET", "header": [], "url": { "raw": "http://{{host}}:{{port_gateway}}/api/crops", "host": [ "http://{{host}}" ], "port": "{{port_gateway}}", "path": [ "api","crops" ] } },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [],
+  "variable": []
+}
+

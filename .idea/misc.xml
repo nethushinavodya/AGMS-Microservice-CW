@@ -12,10 +12,12 @@
         <option value="$PROJECT_DIR$/sensor-telemetry-service/pom.xml" />
         <option value="$PROJECT_DIR$/zone-service/pom.xml" />
         <option value="$PROJECT_DIR$/Sensor-Service/pom.xml" />
+        <option value="$PROJECT_DIR$/Crop-Service/pom.xml" />
+        <option value="$PROJECT_DIR$/iot-backend-main/pom.xml" />
       </list>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_22" project-jdk-name="24" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_22" project-jdk-name="17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

@@ -7,21 +7,31 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="crop-inventory-service" />
         <module name="Eureka-Server" />
         <module name="Api-Gateway" />
         <module name="Config-Server" />
         <module name="Automation-Service" />
+        <module name="Crop-Service" />
       </profile>
-      <profile name="Annotation profile for sensor-telemetry-service" enabled="true">
+      <profile name="Annotation profile for zone-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
         </processorPath>
         <module name="Sensor-Service" />
-        <module name="zone-service" />
+        <module name="Zone-Service" />
+      </profile>
+      <profile name="Annotation profile for iot-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
+        </processorPath>
+        <module name="iot-service" />
       </profile>
     </annotationProcessing>
   </component>
@@ -30,10 +40,11 @@
       <module name="Api-Gateway" options="-parameters" />
       <module name="Automation-Service" options="-parameters" />
       <module name="Config-Server" options="-parameters" />
+      <module name="Crop-Service" options="-parameters" />
       <module name="Eureka-Server" options="-parameters" />
       <module name="Sensor-Service" options="-parameters" />
-      <module name="crop-inventory-service" options="-parameters" />
-      <module name="zone-service" options="-parameters" />
+      <module name="Zone-Service" options="-parameters" />
+      <module name="iot-service" options="-parameters" />
     </option>
   </component>
 </project>

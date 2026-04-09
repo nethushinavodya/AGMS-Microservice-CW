@@ -1,7 +1,11 @@
 server:
-  port: 8080
+  port: ${SERVER_PORT:${PORT:8082}}
 
 spring:
+  # Import configuration from the local Config Server (optional: so gateway still starts if Config Server is down)
+  config:
+    import: "optional:configserver:http://localhost:8888"
+
   application:
     name: api-gateway
 
