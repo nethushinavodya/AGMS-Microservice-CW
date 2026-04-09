@@ -1,4 +1,4 @@
-package com.agms.crop_inventory_service;
+package com.agms.crop_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
