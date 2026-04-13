@@ -182,7 +182,7 @@ Add the following screenshots inside an "images" folder in the repository and re
 
 ### Eureka Dashboard
 
-![Eureka Dashboard](<img width="1920" height="1080" alt="Eureka" src="https://github.com/user-attachments/assets/d6d1a30e-878a-446e-b0ce-c3fe4304a570" />)
+![Eureka Dashboard]<img width="1920" height="1080" alt="Eureka" src="https://github.com/user-attachments/assets/48b8c71c-b0c3-4009-83ce-abed11f80e9f" />
 
 ---
 
