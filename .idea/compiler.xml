@@ -22,7 +22,6 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
         </processorPath>
         <module name="Sensor-Service" />
-        <module name="Zone-Service" />
       </profile>
       <profile name="Annotation profile for iot-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -32,6 +31,15 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
         </processorPath>
         <module name="iot-service" />
+      </profile>
+      <profile name="Annotation profile for Zone-Service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+        </processorPath>
+        <module name="Zone-Service" />
       </profile>
     </annotationProcessing>
   </component>

@@ -10,6 +10,24 @@
       "name": "Zone-Service",
       "item": [
         {
+          "name": "Health - Zone actuator",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{zoneBaseUrl}}/actuator/health",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port_zone}}",
+              "path": [
+                "actuator","health"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Create Zone",
           "request": {
             "method": "POST",
@@ -21,14 +39,13 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"zoneName\": \"Greenhouse A\",\n  \"minTemp\": 18.5,\n  \"maxTemp\": 28.0\n}"
+              "raw": "{{zoneCreateBody}}"
             },
             "url": {
-              "raw": "http://{{host}}:{{port_zone}}/api/zones",
+              "raw": "{{zoneBaseUrl}}{{zonesPath}}",
               "host": [
-                "http://{{host}}"
+                "{{host}}"
               ],
-              "port": "{{port_zone}}",
               "path": [
                 "api","zones"
               ]
@@ -41,7 +58,7 @@
               "script": {
                 "exec": [
                   "pm.test('Status is 200 or 201', function () {\n  pm.expect(pm.response.code).to.be.oneOf([200,201]);\n});",
-                  "if (pm.response.code === 200 || pm.response.code === 201) {\n  var json = pm.response.json();\n  if (json.id) {\n    pm.environment.set('zoneId', json.id);\n  }\n}"
+                  "if (pm.response.code === 200 || pm.response.code === 201) {\n  var json = pm.response.json();\n  if (json.id) {\n    pm.collectionVariables.set('zoneId', json.id);\n  }\n}"
                 ],
                 "type": "text/javascript"
               }
@@ -54,11 +71,10 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://{{host}}:{{port_zone}}/api/zones/{{zoneId}}",
+              "raw": "{{zoneBaseUrl}}{{zonesPath}}/{{zoneId}}",
               "host": [
-                "http://{{host}}"
+                "{{host}}"
               ],
-              "port": "{{port_zone}}",
               "path": [
                 "api","zones","{{zoneId}}"
               ]
@@ -89,14 +105,13 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"zoneName\": \"Greenhouse A - Updated\",\n  \"minTemp\": 19.0,\n  \"maxTemp\": 27.5\n}"
+              "raw": "{{zoneUpdateBody}}"
             },
             "url": {
-              "raw": "http://{{host}}:{{port_zone}}/api/zones/{{zoneId}}",
+              "raw": "{{zoneBaseUrl}}{{zonesPath}}/{{zoneId}}",
               "host": [
-                "http://{{host}}"
+                "{{host}}"
               ],
-              "port": "{{port_zone}}",
               "path": [
                 "api","zones","{{zoneId}}"
               ]
@@ -110,11 +125,10 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "http://{{host}}:{{port_zone}}/api/zones/{{zoneId}}",
+              "raw": "{{zoneBaseUrl}}{{zonesPath}}/{{zoneId}}",
               "host": [
-                "http://{{host}}"
+                "{{host}}"
               ],
-              "port": "{{port_zone}}",
               "path": [
                 "api","zones","{{zoneId}}"
               ]
@@ -134,10 +148,10 @@
             "header": [
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "body": { "mode": "raw", "raw": "{\n  \"cropName\": \"Lettuce\",\n  \"batchNumber\": \"BATCH-001\",\n  \"zoneId\": \"1\",\n  \"quantity\": 100\n}" },
-            "url": { "raw": "http://{{host}}:{{port_crop}}/api/crops", "host": [ "http://{{host}}" ], "port": "{{port_crop}}", "path": [ "api","crops" ] }
+            "body": { "mode": "raw", "raw": "{{cropCreateBody}}" },
+            "url": { "raw": "{{cropBaseUrl}}{{cropsPath}}", "host": [ "{{host}}" ], "path": [ "api","crops" ] }
           },
-          "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Status is 200 or 201', function () { pm.expect(pm.response.code).to.be.oneOf([200,201]); });", "if (pm.response.code === 200 || pm.response.code === 201) { var json = pm.response.json(); if (json.id) { pm.environment.set('cropId', json.id); } }" ], "type": "text/javascript" } } ],
+          "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Status is 200 or 201', function () { pm.expect(pm.response.code).to.be.oneOf([200,201]); });", "if (pm.response.code === 200 || pm.response.code === 201) { var json = pm.response.json(); if (json.id) { pm.collectionVariables.set('cropId', json.id); } }" ], "type": "text/javascript" } } ],
           "response": []
         },
         {
@@ -145,14 +159,14 @@
           "request": {
             "method": "PUT",
             "header": [ { "key": "Content-Type", "value": "application/json" } ],
-            "body": { "mode": "raw", "raw": "{\n  \"status\": \"VEGETATIVE\"\n}" },
-            "url": { "raw": "http://{{host}}:{{port_crop}}/api/crops/{{cropId}}/status", "host": [ "http://{{host}}" ], "port": "{{port_crop}}", "path": [ "api","crops","{{cropId}}","status" ] }
+            "body": { "mode": "raw", "raw": "{{cropStatusBody}}" },
+            "url": { "raw": "{{cropBaseUrl}}{{cropsPath}}/{{cropId}}/status", "host": [ "{{host}}" ], "path": [ "api","crops","{{cropId}}","status" ] }
           },
           "response": []
         },
         {
           "name": "Get All Crops",
-          "request": { "method": "GET", "header": [], "url": { "raw": "http://{{host}}:{{port_crop}}/api/crops", "host": [ "http://{{host}}" ], "port": "{{port_crop}}", "path": [ "api","crops" ] } },
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{cropBaseUrl}}{{cropsPath}}", "host": [ "{{host}}" ], "path": [ "api","crops" ] } },
           "response": []
         }
       ]
@@ -165,14 +179,14 @@
           "request": {
             "method": "POST",
             "header": [ { "key": "Content-Type", "value": "application/json" } ],
-            "body": { "mode": "raw", "raw": "{\n  \"deviceId\": \"dev-123\",\n  \"zoneId\": \"1\",\n  \"temperature\": 26.3,\n  \"humidity\": 55.2,\n  \"capturedAt\": \"2026-04-09T12:00:00Z\"\n}" },
-            "url": { "raw": "http://{{host}}:{{port_automation}}/api/automation/process", "host": [ "http://{{host}}" ], "port": "{{port_automation}}", "path": [ "api","automation","process" ] }
+            "body": { "mode": "raw", "raw": "{{automationProcessBody}}" },
+            "url": { "raw": "{{automationBaseUrl}}{{automationProcessPath}}", "host": [ "{{host}}" ], "path": [ "api","automation","process" ] }
           },
           "response": []
         },
         {
           "name": "Get Automation Logs",
-          "request": { "method": "GET", "header": [], "url": { "raw": "http://{{host}}:{{port_automation}}/api/automation/logs", "host": [ "http://{{host}}" ], "port": "{{port_automation}}", "path": [ "api","automation","logs" ] } },
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{automationBaseUrl}}{{automationLogsPath}}", "host": [ "{{host}}" ], "path": [ "api","automation","logs" ] } },
           "response": []
         }
       ]
@@ -182,7 +196,7 @@
       "item": [
         {
           "name": "Get Latest Telemetry",
-          "request": { "method": "GET", "header": [], "url": { "raw": "http://{{host}}:{{port_sensor}}/api/sensors/latest", "host": [ "http://{{host}}" ], "port": "{{port_sensor}}", "path": [ "api","sensors","latest" ] } },
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{sensorBaseUrl}}{{sensorLatestPath}}", "host": [ "{{host}}" ], "path": [ "api","sensors","latest" ] } },
           "response": []
         }
       ]
@@ -192,7 +206,7 @@
       "item": [
         {
           "name": "Eureka Dashboard (health)",
-          "request": { "method": "GET", "header": [], "url": { "raw": "http://{{host}}:{{port_eureka}}/", "host": [ "http://{{host}}" ], "port": "{{port_eureka}}", "path": [] } },
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{eurekaBaseUrl}}/", "host": [ "http://{{host}}" ], "port": "{{port_eureka}}", "path": [] } },
           "response": []
         }
       ]
@@ -201,14 +215,115 @@
       "name": "Api-Gateway",
       "item": [
         {
-          "name": "Proxy - Get All Crops (via gateway)",
-          "request": { "method": "GET", "header": [], "url": { "raw": "http://{{host}}:{{port_gateway}}/api/crops", "host": [ "http://{{host}}" ], "port": "{{port_gateway}}", "path": [ "api","crops" ] } },
+          "name": "Gateway - Get Zone by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gatewayBaseUrl}}{{zonesPath}}/{{zoneId}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port_gateway}}",
+              "path": [
+                "api","zones","{{zoneId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Gateway - Latest Telemetry",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gatewayBaseUrl}}{{sensorLatestPath}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port_gateway}}",
+              "path": [
+                "api","sensors","latest"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Gateway - Automation Logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gatewayBaseUrl}}{{automationLogsPath}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port_gateway}}",
+              "path": [
+                "api","automation","logs"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Gateway - Get All Crops",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gatewayBaseUrl}}{{cropsPath}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port_gateway}}",
+              "path": [
+                "api","crops"
+              ]
+            }
+          },
           "response": []
         }
       ]
     }
   ],
   "event": [],
-  "variable": []
-}
+  "variable": [
+    { "key": "host", "value": "localhost" },
 
+    { "key": "port_zone", "value": "8081" },
+    { "key": "port_crop", "value": "8084" },
+    { "key": "port_sensor", "value": "8083" },
+    { "key": "port_gateway", "value": "8082" },
+    { "key": "port_automation", "value": "8085" },
+    { "key": "port_eureka", "value": "8761" },
+    { "key": "port_config", "value": "8888" },
+
+    { "key": "gatewayBaseUrl", "value": "http://{{host}}:{{port_gateway}}" },
+    { "key": "zoneBaseUrl", "value": "http://{{host}}:{{port_zone}}" },
+    { "key": "cropBaseUrl", "value": "http://{{host}}:{{port_crop}}" },
+    { "key": "sensorBaseUrl", "value": "http://{{host}}:{{port_sensor}}" },
+    { "key": "automationBaseUrl", "value": "http://{{host}}:{{port_automation}}" },
+    { "key": "eurekaBaseUrl", "value": "http://{{host}}:{{port_eureka}}" },
+    { "key": "configBaseUrl", "value": "http://{{host}}:{{port_config}}" },
+
+    { "key": "baseUrl", "value": "{{gatewayBaseUrl}}" },
+
+    { "key": "zonesPath", "value": "/api/zones" },
+    { "key": "cropsPath", "value": "/api/crops" },
+    { "key": "automationProcessPath", "value": "/api/automation/process" },
+    { "key": "automationLogsPath", "value": "/api/automation/logs" },
+    { "key": "sensorLatestPath", "value": "/api/sensors/latest" },
+
+    { "key": "zoneId", "value": "1" },
+    { "key": "cropId", "value": "1" },
+
+    { "key": "zoneCreateBody", "value": "{\n  \"zoneName\": \"Greenhouse A\",\n  \"minTemp\": 18.5,\n  \"maxTemp\": 28.0\n}" },
+    { "key": "zoneUpdateBody", "value": "{\n  \"zoneName\": \"Greenhouse A - Updated\",\n  \"minTemp\": 19.0,\n  \"maxTemp\": 27.5\n}" },
+    { "key": "cropCreateBody", "value": "{\n  \"cropName\": \"Lettuce\",\n  \"batchNumber\": \"BATCH-001\",\n  \"zoneId\": \"{{zoneId}}\",\n  \"quantity\": 100\n}" },
+    { "key": "cropStatusBody", "value": "{\n  \"status\": \"VEGETATIVE\"\n}" },
+    { "key": "automationProcessBody", "value": "{\n  \"deviceId\": \"dev-123\",\n  \"zoneId\": \"{{zoneId}}\",\n  \"temperature\": 26.3,\n  \"humidity\": 55.2,\n  \"capturedAt\": \"2026-04-09T12:00:00Z\"\n}" }
+  ]
+}
